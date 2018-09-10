@@ -1,1 +1,8 @@
-./null-writer/data/db/user-files.sqlite3
+null-writer/data/db/user-files.sqlite3
+null-writer/logs/*
+null-writer/user_docs/*
+.idea
+.vscode
+*/*.pyc
+*/*/*.pyc
+*/__pycache__
