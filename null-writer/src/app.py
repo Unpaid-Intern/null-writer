@@ -138,8 +138,8 @@ class ListView(Frame):
 class UserfileView(Frame):
     def __init__(self, screen, model):
         super(UserfileView, self).__init__(screen,
-                                          screen.height * 2 // 3,
-                                          screen.width * 2 // 3,
+                                          screen.height * 2 // 2,
+                                          screen.width * 2 // 2,
                                           hover_focus=True,
                                           title="File Details",
                                           reduce_cpu=True)
