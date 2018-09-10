@@ -3,7 +3,6 @@ from asciimatics.widgets import Frame, ListBox, Layout, Divider, Text, \
 from asciimatics.scene import Scene
 from asciimatics.screen import Screen
 from asciimatics.exceptions import ResizeScreenError, NextScene, StopApplication
-from views import *
 
 import sys
 import sqlite3
@@ -30,7 +29,6 @@ class UserfileModel(object):
                     id INTEGER PRIMARY KEY,
                     filename TEXT,
                     date TEXT,
-                    title TEXT,
                     author TEXT,
                     content TEXT)
                 ''')
@@ -41,8 +39,8 @@ class UserfileModel(object):
 
     def add(self, Userfile):
         self._db.cursor().execute('''
-            INSERT INTO userfiles(filename, date, title, author, content)
-            VALUES(:filename, :date, :title, :author, :content)''',
+            INSERT INTO userfiles(filename, date, author, content)
+            VALUES(:filename, :date, :author, :content)''',
                                   Userfile)
         self._db.commit()
 
@@ -56,7 +54,7 @@ class UserfileModel(object):
 
     def get_current_userfile(self):
         if self.current_id is None:
-            return {"filename": "", "date": "", "title": "", "author": "", "content": ""}
+            return {"filename": "", "date": "", "author": "", "content": ""}
         else:
             return self.get_userfile(self.current_id)
 
@@ -65,7 +63,7 @@ class UserfileModel(object):
             self.add(details)
         else:
             self._db.cursor().execute('''
-                UPDATE userfiles SET filename=:filename, date=:date, title=:title,
+                UPDATE userfiles SET filename=:filename, date=:date,
                 author=:author, content=:content WHERE id=:id''',
                                       details)
             self._db.commit()
@@ -153,7 +151,6 @@ class UserfileView(Frame):
         self.add_layout(layout)
         layout.add_widget(Text("File Name:", "filename"))
         layout.add_widget(Text("Date:", "date"))
-        layout.add_widget(Text("Title:", "title"))
         layout.add_widget(Text("Author:", "author"))
         layout.add_widget(TextBox(
             Widget.FILL_FRAME, "Content:", "content", as_string=True))
