@@ -3,6 +3,8 @@ from asciimatics.widgets import Frame, ListBox, Layout, Divider, Text, \
 from asciimatics.scene import Scene
 from asciimatics.screen import Screen
 from asciimatics.exceptions import ResizeScreenError, NextScene, StopApplication
+from views import *
+
 import sys
 import sqlite3
 
@@ -81,7 +83,7 @@ class ListView(Frame):
                                        screen.width,
                                        on_load=self._reload_list,
                                        hover_focus=True,
-                                       title="Userfile List")
+                                       title="List of user files")
         # Save off the model that accesses the userfiles database.
         self._model = model
 
@@ -125,8 +127,10 @@ class ListView(Frame):
 
     def _delete(self):
         self.save()
-        self._model.delete_userfile(self.data["userfiles"])
-        self._reload_list()
+        self._model.current_id = self.data["userfiles"]
+        raise NextScene("Delete File")
+        # self._model.delete_userfile(self.data["userfiles"])
+        # self._reload_list()
 
     @staticmethod
     def _quit():
@@ -173,11 +177,48 @@ class UserfileView(Frame):
     def _cancel():
         raise NextScene("Main")
 
+class DeleteConfirmView(Frame):
+    def __init__(self, screen, model):
+        super(DeleteConfirmView, self).__init__(screen,
+                                          screen.height * 2 // 3,
+                                          screen.width * 2 // 3,
+                                          hover_focus=True,
+                                          title="Delete File?",
+                                          reduce_cpu=True)
+        # Save off the model that accesses the userfiles database.
+        self._model = model
+
+        # Create the form for displaying the list of userfiles.
+        layout = Layout([100], fill_frame=True)
+        self.add_layout(layout)
+        layout.add_widget(Text("File to delete:", "filename"))
+        layout2 = Layout([1, 1, 1, 1])
+        self.add_layout(layout2)
+        layout2.add_widget(Button("OK", self._ok), 0)
+        layout2.add_widget(Button("Cancel", self._cancel), 3)
+        self.fix()
+
+    def reset(self):
+        # Do standard reset to clear out form, then populate with new data.
+        super(DeleteConfirmView, self).reset()
+        self.data = self._model.get_current_userfile()
+        
+
+    def _ok(self):
+        self.save()
+        self._model.delete_userfile(self._model.current_id)
+        raise NextScene("Main")
+
+    @staticmethod
+    def _cancel():
+        raise NextScene("Main")
+
 
 def demo(screen, scene):
     scenes = [
         Scene([ListView(screen, userfiles)], -1, name="Main"),
-        Scene([UserfileView(screen, userfiles)], -1, name="Edit File")
+        Scene([UserfileView(screen, userfiles)], -1, name="Edit File"),
+        Scene([DeleteConfirmView(screen, userfiles)], -1, name="Delete File")
     ]
 
     screen.play(scenes, stop_on_resize=True, start_scene=scene)
