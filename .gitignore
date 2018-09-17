@@ -1,6 +1,6 @@
-./data/db/user-files.sqlite3
-./logs/*.log
-./user_docs/*.txt
+data/db/user-files.sqlite3
+logs/*.log
+user_docs/*.txt
 .idea
 .vscode
 */*.pyc
