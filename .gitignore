@@ -1,5 +1,6 @@
 null-writer/data/db/user-files.sqlite3
-
+null-writer/logs/*.log
+null-writer/user_docs/*.txt
 .idea
 .vscode
 */*.pyc
