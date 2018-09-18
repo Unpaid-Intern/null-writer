@@ -1,6 +1,12 @@
-/data/user-files.sqlite3
-/logs/*.log
+data/user-files.sqlite3
+!data/.gitkeep 
+
+logs/*.log
+!logs/.gitkeep 
+
 /user_files/*.txt
+!user_files/.gitkeep 
+
 .idea
 .vscode
 */*.pyc
