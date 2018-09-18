@@ -13,7 +13,7 @@ class UserfileModel(object):
 
 
         # Create or open the database for user files in the file system
-        self._db = sqlite3.connect('../data/db/user-files.sqlite3')
+        self._db = sqlite3.connect('../data/user-files.sqlite3')
         self._db.row_factory = sqlite3.Row
 
 

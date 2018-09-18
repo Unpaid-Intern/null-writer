@@ -1,4 +1,4 @@
-/data/db/user-files.sqlite3
+/data/user-files.sqlite3
 /logs/*.log
 /user_files/*.txt
 .idea
