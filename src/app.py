@@ -10,16 +10,11 @@ import sqlite3
 
 class UserfileModel(object):
     def __init__(self):
-
-
         # Create or open the database for user files in the file system
         self._db = sqlite3.connect('../data/user-files.sqlite3')
         self._db.row_factory = sqlite3.Row
 
-
-
-        # Attempt to open the file table. If that fails, create a new file table
-        
+        # Attempt to open the file table. If that fails, create a new file table        
         try:
             one_file = self._db.cursor().execute("SELECT * from userfiles").fetchone()
         except:
@@ -34,9 +29,9 @@ class UserfileModel(object):
                 ''')
             self._db.commit()
 
-        # Current Userfile when editing.
         self.current_id = None
 
+    # define Read/Write actions
     def add(self, Userfile):
         self._db.cursor().execute('''
             INSERT INTO userfiles(filename, date, author, content)
@@ -73,7 +68,8 @@ class UserfileModel(object):
             DELETE FROM userfiles WHERE id=:id''', {"id": userfile_id})
         self._db.commit()
 
-
+        
+# list screen
 class ListView(Frame):
     def __init__(self, screen, model):
         super(ListView, self).__init__(screen,
@@ -82,7 +78,7 @@ class ListView(Frame):
                                        on_load=self._reload_list,
                                        hover_focus=True,
                                        title="List of user files")
-        # Save off the model that accesses the userfiles database.
+        # Save from the model that accesses the userfiles database.
         self._model = model
 
         # Create the form for displaying the list of userfiles.
@@ -134,7 +130,8 @@ class ListView(Frame):
     def _quit():
         raise StopApplication("User pressed quit")
 
-
+        
+# edit screen
 class UserfileView(Frame):
     def __init__(self, screen, model):
         super(UserfileView, self).__init__(screen,
@@ -174,6 +171,8 @@ class UserfileView(Frame):
     def _cancel():
         raise NextScene("Main")
 
+        
+# delete confirmation screen
 class DeleteConfirmView(Frame):
     def __init__(self, screen, model):
         super(DeleteConfirmView, self).__init__(screen,
@@ -210,8 +209,8 @@ class DeleteConfirmView(Frame):
     def _cancel():
         raise NextScene("Main")
 
-
-def demo(screen, scene):
+# load views
+def load_views(screen, scene):
     scenes = [
         Scene([ListView(screen, userfiles)], -1, name="Main"),
         Scene([UserfileView(screen, userfiles)], -1, name="Edit File"),
@@ -224,7 +223,7 @@ userfiles = UserfileModel()
 last_scene = None
 while True:
     try:
-        Screen.wrapper(demo, catch_interrupt=True, arguments=[last_scene])
+        Screen.wrapper(load_views, catch_interrupt=True, arguments=[last_scene])
         sys.exit(0)
     except ResizeScreenError as e:
         last_scene = e.scene
